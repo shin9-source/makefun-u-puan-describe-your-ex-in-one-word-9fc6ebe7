@@ -1,20 +1,18 @@
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 
-const entry: string = "Demo";
+const entry = "Warmup";
 
-if (entry.length < 1 || entry.length > 111) {
-  console.error("entry must be 1-111 characters");
-  process.exit(1);
+if (entry.trim().length === 0) {
+  throw new Error("entry must not be blank");
+}
+
+if (/\s/.test(entry)) {
+  throw new Error("entry must be a single word");
 }
 
 if (Buffer.byteLength(entry, "utf8") > 111) {
-  console.error("entry must be at most 111 UTF-8 bytes");
-  process.exit(1);
+  throw new Error("entry exceeds 111 UTF-8 bytes");
 }
 
-if (entry.trim() !== entry || /\s/.test(entry)) {
-  console.error("entry must be a single word without whitespace");
-  process.exit(1);
-}
-
+mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", entry, "utf8");
