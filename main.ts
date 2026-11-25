@@ -1,15 +1,20 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 
-// Entry: one word for "Describe Your Ex in One Word".
-// "Beta" — the verdict: a trial version, never finished, never shipped.
-// Comic punch through an unexpected angle: the ex as unfinished software,
-// not a plain insult. Short (4 bytes) for the smaller-byte tie-break.
-const entry = "Beta";
+const entry: string = "Demo";
 
-// Gate check: exactly one word, 1-111 chars, not whitespace-only.
-if (!/^\S+$/.test(entry) || entry.length < 1 || entry.length > 111) {
-  throw new Error("entry must be a single word of 1-111 characters");
+if (entry.length < 1 || entry.length > 111) {
+  console.error("entry must be 1-111 characters");
+  process.exit(1);
 }
 
-mkdirSync("/output", { recursive: true });
+if (Buffer.byteLength(entry, "utf8") > 111) {
+  console.error("entry must be at most 111 UTF-8 bytes");
+  process.exit(1);
+}
+
+if (entry.trim() !== entry || /\s/.test(entry)) {
+  console.error("entry must be a single word without whitespace");
+  process.exit(1);
+}
+
 writeFileSync("/output/entry.txt", entry, "utf8");
