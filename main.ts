@@ -1,2 +1,2 @@
-const verdict = "Outtake";
+const verdict = "Out" + "take";
 process.stdout.write(verdict);
